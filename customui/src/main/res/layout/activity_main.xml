@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="data"
+            type="com.amazonaws.ivs.player.customui.viewModel.MainViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        tools:context=".activities.MainActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:animateLayoutChanges="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/player_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackground">
+
+                <SurfaceView
+                    android:id="@+id/surface_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+                <ProgressBar
+                    android:id="@+id/pb_buffering"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:scaleType="center"
+                    android:visibility="@{data.buffering ? View.VISIBLE : View.GONE}"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
+            <include layout="@layout/view_player_controls"
+                app:data="@{data}" />
+
+            <ImageView
+                android:id="@+id/tv_url_selection_button"
+                android:layout_width="@dimen/url_selection_button_size"
+                android:layout_height="@dimen/url_selection_button_size"
+                android:layout_margin="@dimen/dimen_small"
+                android:padding="@dimen/url_selection_button_padding"
+                android:contentDescription="@null"
+                android:visibility="@{data.showControls ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/ic_more_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/sheetBackground"
+            android:background="@color/sheetBackground"
+            android:alpha="0"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/rate_sheet"
+            layout="@layout/player_rate_sheet" />
+
+        <include
+            android:id="@+id/quality_sheet"
+            layout="@layout/player_quality_sheet" />
+
+        <include
+            android:id="@+id/source_sheet"
+            layout="@layout/player_source_sheet" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">QuizDemo</string>
+    <string name="dialog_ok">OK</string>
+    <string name="error_happened_template">Error happened (Code - %1$s)</string>
+
+    <string name="live_status">● LIVE</string>
+    <string name="quiz_message">Waiting for the next question</string>
+    <string name="select_source">Select source</string>
+    <string name="select_source_hint">Enter a custom playback URL</string>
+</resources>

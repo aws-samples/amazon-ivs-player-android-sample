@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_height">40dp</dimen>
+    <dimen name="play_button_size">50dp</dimen>
+    <dimen name="option_button_size">38dp</dimen>
+    <dimen name="url_selection_button_size">48dp</dimen>
+    <dimen name="url_selection_button_padding">12dp</dimen>
+    <dimen name="player_control_height">100dp</dimen>
+    <dimen name="player_control_landscape_width">400dp</dimen>
+
+    <dimen name="dimen_small">8dp</dimen>
+    <dimen name="dimen_medium">12dp</dimen>
+    <dimen name="dimen_big">16dp</dimen>
+
+    <dimen name="small_text_size">10sp</dimen>
+    <dimen name="medium_text_size">14sp</dimen>
+    <dimen name="big_text_size">16sp</dimen>
+
+</resources>

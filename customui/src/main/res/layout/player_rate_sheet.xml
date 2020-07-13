@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rate_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/colorTransparent"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/option_title_background"
+        android:gravity="center"
+        android:text="@string/playback_speed"
+        android:textAlignment="center" />
+
+    <com.amazonaws.ivs.player.customui.views.MaxHeightRecyclerView
+        android:id="@+id/rate_option_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:maxHeight="500dp"
+        tools:itemCount="3"
+        tools:listitem="@layout/selector_list_item" />
+
+    <TextView
+        android:id="@+id/rate_close_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/option_background"
+        android:gravity="center"
+        android:text="@string/close_button"
+        android:textColor="@color/colorAccent" />
+</LinearLayout>

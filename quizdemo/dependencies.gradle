@@ -1,0 +1,44 @@
+def appCompatVersion = '1.1.0'
+def coreVersion = '1.2.0'
+def constraintLayoutVersion = '1.1.3'
+def materialDesignVersion = '1.1.0'
+def recyclerViewVersion = '1.1.0'
+def roomVersion = '2.2.5'
+def cardViewVersion = '1.0.0'
+def lifecycleVersion = '2.2.0'
+def daggerVersion = '2.27'
+def gsonVersion = '2.8.6'
+
+dependencies {
+
+    // Libraries
+    implementation 'tv.twitch:playercore:1.0.0-ga.3@aar' // TODO replace with JCenter version
+
+    // Material design
+    implementation "com.google.android.material:material:$materialDesignVersion"
+
+    // Android
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+    implementation "androidx.cardview:cardview:$cardViewVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+
+    // Gson
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
+    // Room components
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    // Dagger
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+}

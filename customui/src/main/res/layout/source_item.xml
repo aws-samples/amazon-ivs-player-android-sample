@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="data"
+            type="com.amazonaws.ivs.player.customui.data.entity.SourceDataItem" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_small"
+        android:height="@dimen/button_height"
+        android:background="@drawable/source_background"
+        android:orientation="horizontal"
+        app:layout_goneMarginBottom="@dimen/dimen_small">
+
+        <TextView
+            android:id="@+id/source_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:height="@dimen/button_height"
+            android:ellipsize="end"
+            android:gravity="start|center"
+            android:paddingStart="@dimen/dimen_medium"
+            android:singleLine="true"
+            android:text="@{data.title}"
+            android:textColor="@color/colorSource"
+            android:textStyle="bold"
+            tools:text="Item" />
+
+        <TextView
+            android:id="@+id/delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/dimen_small"
+            android:background="@drawable/selector_source_close"
+            android:visibility="@{data.defaultOption ? View.INVISIBLE : View.VISIBLE}"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+</layout>
