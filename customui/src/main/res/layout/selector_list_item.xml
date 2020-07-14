@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.amazonaws.ivs.player.customui.data.entity.OptionDataItem" />
+    </data>
+
+    <TextView
+        android:id="@+id/option_item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="1dp"
+        android:background="@color/colorOptionBackground"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="@{data.option}"
+        android:textAlignment="center"
+        android:textColor="@{(data.isDefault == true) ? @color/colorPrimaryDark : @color/colorAccent}"
+        android:textSize="@dimen/big_text_size"
+        tools:text="Item" />
+
+</layout>

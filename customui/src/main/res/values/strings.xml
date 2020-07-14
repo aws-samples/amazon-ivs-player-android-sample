@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">CustomUI</string>
+    <string name="close_button">Close</string>
+    <string name="buffering">Buffering…</string>
+    <string name="paused">Paused</string>
+    <string name="ended">Ended</string>
+    <string name="live_status">● LIVE</string>
+    <string name="vod_status">◼︎ RECORDED VIDEO</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="quality_options">Quality options</string>
+    <string name="select_source">Select source</string>
+    <string name="select_source_hint">Enter a custom playback URL</string>
+    <string name="dialog_ok">OK</string>
+    <string name="error_happened_template">Error happened (Code - %1$s)</string>
+</resources>

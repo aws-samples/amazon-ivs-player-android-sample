@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.amazonaws.ivs.player.quizdemo.models.AnswerViewItem" />
+    </data>
+
+    <TextView
+        android:id="@+id/option_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_medium"
+        android:layout_marginTop="@dimen/dimen_small"
+        android:layout_marginEnd="@dimen/dimen_medium"
+        android:background="@{!data.isSelected ? @drawable/answer_background : data.isAnsweredCorrect ? @drawable/correct_answer_background : @drawable/incorrect_answer_background}"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="start"
+        android:padding="@dimen/dimen_medium"
+        android:text="@{data.answer}"
+        android:textColor="@{data.isSelected ? @color/colorWhite : @color/colorBlack}"
+        android:textSize="@dimen/big_text_size"
+        tools:text="Item" />
+
+</layout>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="data"
+            type="com.amazonaws.ivs.player.customui.viewModel.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/player_controls_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/player_controls"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/player_control_height"
+            android:background="@color/controlsBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="@{data.showControls ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_small"
+                android:gravity="start"
+                android:text="@{data.progress}"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/small_text_size"
+                android:visibility="@{data.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Progress text" />
+
+            <TextView
+                android:id="@+id/tv_duration_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_small"
+                android:gravity="end"
+                android:text="@{data.duration}"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/small_text_size"
+                android:visibility="@{data.durationVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Duration text" />
+
+            <ImageView
+                android:id="@+id/play_button_view"
+                android:layout_width="@dimen/play_button_size"
+                android:layout_height="@dimen/play_button_size"
+                android:layout_marginBottom="@dimen/dimen_small"
+                android:clickable="true"
+                android:contentDescription="@null"
+                android:focusable="true"
+                android:src="@{data.isPlaying ? @drawable/ic_pause_button : @drawable/ic_play_button}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_small"
+                android:layout_marginBottom="@dimen/dimen_small"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="@dimen/small_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/play_button_view"
+                tools:text="text"
+                tools:textColor="@color/colorText" />
+
+            <FrameLayout
+                android:id="@+id/quality_button"
+                android:layout_width="@dimen/option_button_size"
+                android:layout_height="@dimen/option_button_size"
+                android:layout_marginEnd="50dp"
+                android:background="@drawable/round"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="@dimen/dimen_big"
+                    android:layout_height="@dimen/dimen_big"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_settings" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/playback_rate_button"
+                android:layout_width="@dimen/option_button_size"
+                android:layout_height="@dimen/option_button_size"
+                android:layout_marginStart="50dp"
+                android:background="@drawable/round"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_playback_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{data.selectedRateValue}"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/medium_text_size"
+                    android:textStyle="bold" />
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:max="@{data.seekBarMax}"
+            android:progress="@{data.seekBarProgress}"
+            android:progressDrawable="@drawable/seekbar_progress"
+            android:secondaryProgress="@{data.seekBarSecondaryProgress}"
+            android:thumb="@drawable/seekbar_thumb"
+            android:visibility="@{data.seekBarVisible &amp;&amp; data.liveStream == false ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@id/guideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintGuide_end="@dimen/player_control_height" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
