@@ -1,4 +1,4 @@
-<img align="left" width="128px" src="./ivs-logo.svg" href="https://docs.aws.amazon.com/ivs/">
+<a href="https://docs.aws.amazon.com/ivs/"><img align="right" width="128px" src="./ivs-logo.svg"></a>
 
 # Amazon IVS Player Android SDK Sample Apps
 
