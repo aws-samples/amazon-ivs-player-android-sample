@@ -15,8 +15,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://amazon-ivs.bintray.com/ivs"
-        }
     }
 }
 
