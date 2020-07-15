@@ -1,3 +1,5 @@
+<img align="left" width="128px" src="./ivs-logo.svg" href="https://docs.aws.amazon.com/ivs/">
+
 # Amazon IVS Player Android SDK Sample Apps
 
 This repository contains sample apps which use the IVS Player Android SDK.
