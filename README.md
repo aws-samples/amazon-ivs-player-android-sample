@@ -4,6 +4,8 @@
 
 This repository contains sample apps which use the IVS Player Android SDK.
 
+## Samples
+
 + **BasicPlayback**: This is the most basic example of how to get started with the SDK.
 + **CustomUI**: This is a more advanced example that shows how to build a custom UI on top of the SDK.
 + **QuizDemo**: This is a trivia game example in which the questions are sent over timed metadata embedded in the stream.
