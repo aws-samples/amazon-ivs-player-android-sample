@@ -95,16 +95,32 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         }
 
         // Surface view listener for rotation handling
-        surface_view.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            val width = viewModel.playerParamsChanged.value?.first
-            val height = viewModel.playerParamsChanged.value?.second
-            surface_view.post {
-                if (width != null && height != null) {
-                    Log.d(TAG,"On rotation player layout params changed $width $height")
-                    ViewUtil.setLayoutParams(surface_view, width, height)
+        surface_view.addOnLayoutChangeListener(
+            object : View.OnLayoutChangeListener {
+                override fun onLayoutChange(
+                    v: View?,
+                    left: Int,
+                    top: Int,
+                    right: Int,
+                    bottom: Int,
+                    oldLeft: Int,
+                    oldTop: Int,
+                    oldRight: Int,
+                    oldBottom: Int
+                ) {
+                    if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                        val width = viewModel.playerParamsChanged.value?.first
+                        val height = viewModel.playerParamsChanged.value?.second
+                        if (width != null && height != null) {
+                            surface_view.post {
+                                Log.d(TAG,"On rotation player layout params changed $width $height")
+                                ViewUtil.setLayoutParams(surface_view, width, height)
+                            }
+                        }
+                    }
                 }
             }
-        }
+        )
 
         sheetBackground.setOnClickListener {
             qualityDialog.dismiss()
