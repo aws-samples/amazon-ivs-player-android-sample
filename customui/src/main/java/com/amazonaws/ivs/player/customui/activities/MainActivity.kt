@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.SurfaceHolder
+import android.view.SurfaceView
 import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.amazonaws.ivs.player.Player
-import com.amazonaws.ivs.player.ViewUtil
 import com.amazonaws.ivs.player.customui.App
 import com.amazonaws.ivs.player.customui.R
 import com.amazonaws.ivs.player.customui.activities.dialogs.QualityDialog
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
                         if (width != null && height != null) {
                             surface_view.post {
                                 Log.d(TAG,"On rotation player layout params changed $width $height")
-                                ViewUtil.setLayoutParams(surface_view, width, height)
+                                fitSurfaceToView(surface_view, width, height)
                             }
                         }
                     }
@@ -179,7 +179,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
         viewModel.playerParamsChanged.observe(this, Observer {
             Log.d(TAG,"Player layout params changed ${it.first} ${it.second}")
-            ViewUtil.setLayoutParams(surface_view, it.first, it.second)
+            fitSurfaceToView(surface_view, it.first, it.second)
         })
 
         viewModel.errorHappened.observe(this, Observer {
@@ -286,6 +286,26 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
     private fun restartTimer() {
         timerHandler.removeCallbacks(timerRunnable)
         timerHandler.postDelayed(timerRunnable, HIDE_CONTROLS_DELAY)
+    }
+
+    private fun fitSurfaceToView(surfaceView: SurfaceView, width: Int, height: Int) {
+        val parent = surfaceView.parent as View
+        val oldWidth = parent.width
+        val oldHeight = parent.height
+        val newWidth: Int
+        val newHeight: Int
+        val ratio = height.toFloat() / width.toFloat()
+        if (oldHeight.toFloat() > oldWidth.toFloat() * ratio) {
+            newWidth = oldWidth
+            newHeight = (oldWidth.toFloat() * ratio).toInt()
+        } else {
+            newWidth = (oldHeight.toFloat() / ratio).toInt()
+            newHeight = oldHeight
+        }
+        val layoutParams = surfaceView.layoutParams
+        layoutParams.width = newWidth
+        layoutParams.height = newHeight
+        surfaceView.layoutParams = layoutParams
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
