@@ -11,7 +11,7 @@ def daggerVersion = '2.27'
 dependencies {
 
     // Libraries
-    implementation 'com.amazonaws:ivs-player:1.8.0'
+    implementation "com.amazonaws:ivs-player:$player_version"
 
     // Material design
     implementation "com.google.android.material:material:$materialDesignVersion"
