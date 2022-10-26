@@ -5,12 +5,16 @@ apply plugin: 'kotlin-kapt'
 apply from: 'dependencies.gradle'
 
 android {
-    compileSdkVersion 30
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.amazonaws.ivs.player.quizdemo"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -36,4 +40,5 @@ android {
     dataBinding {
         enabled = true
     }
+    namespace 'com.amazonaws.ivs.player.quizdemo'
 }

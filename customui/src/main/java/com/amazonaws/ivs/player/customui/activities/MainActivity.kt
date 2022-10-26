@@ -4,11 +4,13 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.widget.SeekBar
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
@@ -42,7 +44,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
     private val rateDialog by lazy { RateDialog(this, viewModel) }
     private val sourceDialog by lazy { SourceDialog(this, viewModel) }
 
-    private val timerHandler = Handler()
+    private val timerHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = kotlinx.coroutines.Runnable {
         launchMain {
             Log.d(TAG, "Hiding controls")
@@ -190,15 +192,17 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         initSurface()
         initButtons()
         viewModel.playerStart(surface_view.holder.surface)
-    }
 
-    override fun onBackPressed() {
-        when {
-            qualityDialog.isOpened() -> qualityDialog.dismiss()
-            rateDialog.isOpened() -> rateDialog.dismiss()
-            sourceDialog.isOpened() -> sourceDialog.dismiss()
-            else -> super.onBackPressed()
-        }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                when {
+                    qualityDialog.isOpened() -> qualityDialog.dismiss()
+                    rateDialog.isOpened() -> rateDialog.dismiss()
+                    sourceDialog.isOpened() -> sourceDialog.dismiss()
+                    else -> finish()
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -257,7 +261,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
                     viewModel.buttonState.value = PlayingState.PAUSED
                     viewModel.pause()
                 }
-                PlayingState.PAUSED -> {
+                else -> {
                     viewModel.buttonState.value = PlayingState.PLAYING
                     viewModel.play()
                 }
