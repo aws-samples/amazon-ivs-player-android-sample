@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -89,13 +90,15 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
         initUi()
         viewModel.playerStart(surface_view.holder.surface)
-    }
 
-    override fun onBackPressed() {
-        when {
-            sourceDialog.isOpened() -> sourceDialog.dismiss()
-            else -> super.onBackPressed()
-        }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                when {
+                    sourceDialog.isOpened() -> sourceDialog.dismiss()
+                    else -> finish()
+                }
+            }
+        })
     }
 
     override fun onResume() {

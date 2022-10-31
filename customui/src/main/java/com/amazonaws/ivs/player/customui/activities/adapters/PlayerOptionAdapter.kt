@@ -33,7 +33,7 @@ class PlayerOptionAdapter(
     inner class ViewHolder(val binding: SelectorListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
-                callback.onOptionClicked(adapterPosition)
+                callback.onOptionClicked(bindingAdapterPosition)
             }
         }
     }

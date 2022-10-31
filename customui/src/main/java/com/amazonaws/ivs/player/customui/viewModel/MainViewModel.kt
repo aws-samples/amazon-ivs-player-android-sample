@@ -3,6 +3,7 @@ package com.amazonaws.ivs.player.customui.viewModel
 import android.app.Application
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +18,6 @@ import com.amazonaws.ivs.player.customui.common.enums.PlayingState
 import com.amazonaws.ivs.player.customui.data.LocalCacheProvider
 import com.amazonaws.ivs.player.customui.data.entity.OptionDataItem
 import com.amazonaws.ivs.player.customui.data.entity.SourceDataItem
-import kotlinx.coroutines.flow.collect
 import java.nio.charset.StandardCharsets
 
 class MainViewModel(
@@ -28,7 +28,7 @@ class MainViewModel(
     private var player: MediaPlayer? = null
     private var playerListener: Player.Listener? = null
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private val updateSeekBarTask = object : Runnable {
         override fun run() {
             progress.value = player?.position?.timeString()
