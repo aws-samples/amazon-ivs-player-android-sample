@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Surface
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.amazonaws.ivs.player.MediaPlayer
 import com.amazonaws.ivs.player.MediaType
 import com.amazonaws.ivs.player.Player
 import com.amazonaws.ivs.player.quizdemo.common.*
@@ -24,7 +23,7 @@ class MainViewModel(
     private val cacheProvider: LocalCacheProvider
 ) : ViewModel() {
 
-    private var player: MediaPlayer? = null
+    private var player: Player? = null
     private var playerListener: Player.Listener? = null
 
     val liveStream = MutableLiveData<Boolean>()
@@ -47,7 +46,7 @@ class MainViewModel(
 
     private fun initPlayer() {
         // Media player initialization
-        player = MediaPlayer(context)
+        player = Player.Factory.create(context)
 
         player?.setListener(
             onVideoSizeChanged = { width, height ->
