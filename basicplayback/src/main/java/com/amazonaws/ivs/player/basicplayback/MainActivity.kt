@@ -18,9 +18,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    // PlayerView is an easy to use wrapper around the MediaPlayer object.
-    // If you want to use the MediaPlayer object directly, you can instantiate a
-    // MediaPlayer object and attach it to a SurfaceView with MediaPlayer.setSurface()
+    // PlayerView is an easy to use wrapper around the Player object.
+    // If you want to use the Player object directly, you can instantiate a
+    // Player object and attach it to a SurfaceView with Player.setSurface()
     private lateinit var playerView : PlayerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
