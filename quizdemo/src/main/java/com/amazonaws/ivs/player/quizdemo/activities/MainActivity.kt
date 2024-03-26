@@ -20,7 +20,6 @@ import com.amazonaws.ivs.player.quizdemo.data.LocalCacheProvider
 import com.amazonaws.ivs.player.quizdemo.databinding.ActivityMainBinding
 import com.amazonaws.ivs.player.quizdemo.viewModels.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
@@ -42,18 +41,20 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
     val sheetListener by lazy {
         object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                sheetBackground.visibility = View.VISIBLE
-                sheetBackground.alpha = slideOffset
+                binding.sheetBackground.visibility = View.VISIBLE
+                binding.sheetBackground.alpha = slideOffset
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    sheetBackground.visibility = View.GONE
-                    sheetBackground.alpha = 0f
+                    binding.sheetBackground.visibility = View.GONE
+                    binding.sheetBackground.alpha = 0f
                 }
             }
         }
     }
+
+    lateinit var binding: ActivityMainBinding
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -64,13 +65,14 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         super.onCreate(savedInstanceState)
         App.component.inject(this)
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
+            binding = this
             data = viewModel
             lifecycleOwner = this@MainActivity
         }
 
         viewModel.playerParamsChanged.observe(this, Observer {
             Log.d(TAG, "Player layout params changed ${it.first} ${it.second}")
-            fitSurfaceToView(surface_view, it.first, it.second)
+            fitSurfaceToView(binding.surfaceView, it.first, it.second)
         })
 
         viewModel.errorHappened.observe(this, Observer {
@@ -80,16 +82,16 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
         viewModel.showQuestions.observe(this, Observer {
             if (it == true) {
-                quiz_root.fadeIn()
+                binding.quizRoot.fadeIn()
             } else {
                 if (viewModel.questionChanged.value == false) {
-                    quiz_root.fadeOut()
+                    binding.quizRoot.fadeOut()
                 }
             }
         })
 
         initUi()
-        viewModel.playerStart(surface_view.holder.surface)
+        viewModel.playerStart(binding.surfaceView.holder.surface)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -115,22 +117,22 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         super.onDestroy()
         viewModel.release()
         sourceDialog.release()
-        surface_view.holder.removeCallback(this)
+        binding.surfaceView.holder.removeCallback(this)
     }
 
     private fun changeQuizMargin(newConfig: Configuration) {
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            quiz_root.setBottomMargin(resources.getDimension(R.dimen.quiz_root_portrait_margin).toInt())
+            binding.quizRoot.setBottomMargin(resources.getDimension(R.dimen.quiz_root_portrait_margin).toInt())
         } else {
-            quiz_root.setBottomMargin(resources.getDimension(R.dimen.quiz_root_landscape_margin).toInt())
+            binding.quizRoot.setBottomMargin(resources.getDimension(R.dimen.quiz_root_landscape_margin).toInt())
         }
     }
 
     private fun initUi() {
-        surface_view.holder.addCallback(this)
+        binding.surfaceView.holder.addCallback(this)
         changeQuizMargin(resources.configuration)
 
-        answer_view.apply {
+        binding.answerView.apply {
             adapter = answerAdapter
         }
 
@@ -139,41 +141,27 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
             answerAdapter.items = items
         })
 
-        sheetBackground.setOnClickListener {
+        binding.sheetBackground.setOnClickListener {
             sourceDialog.dismiss()
         }
 
-        source_button.setOnClickListener {
+        binding.sourceButton.setOnClickListener {
             sourceDialog.show()
         }
 
         // Surface view listener for rotation handling
-        surface_view.addOnLayoutChangeListener (
-            object : View.OnLayoutChangeListener {
-                override fun onLayoutChange(
-                    v: View?,
-                    left: Int,
-                    top: Int,
-                    right: Int,
-                    bottom: Int,
-                    oldLeft: Int,
-                    oldTop: Int,
-                    oldRight: Int,
-                    oldBottom: Int
-                ) {
-                    if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-                        val width = viewModel.playerParamsChanged.value?.first
-                        val height = viewModel.playerParamsChanged.value?.second
-                        if (width != null && height != null) {
-                            surface_view.post {
-                                Log.d(TAG, "On rotation player layout params changed $width $height")
-                                fitSurfaceToView(surface_view, width, height)
-                            }
-                        }
+        binding.surfaceView.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                val width = viewModel.playerParamsChanged.value?.first
+                val height = viewModel.playerParamsChanged.value?.second
+                if (width != null && height != null) {
+                    binding.surfaceView.post {
+                        Log.d(TAG, "On rotation player layout params changed $width $height")
+                        fitSurfaceToView(binding.surfaceView, width, height)
                     }
                 }
             }
-        )
+        }
 
     }
 

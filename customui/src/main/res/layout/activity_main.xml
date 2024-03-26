@@ -48,7 +48,8 @@
             </FrameLayout>
 
             <include layout="@layout/view_player_controls"
-                app:data="@{data}" />
+                    android:id="@+id/player_controls"
+                    app:data="@{data}" />
 
             <ImageView
                 android:id="@+id/tv_url_selection_button"

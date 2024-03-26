@@ -31,8 +31,6 @@ import com.amazonaws.ivs.player.customui.data.LocalCacheProvider
 import com.amazonaws.ivs.player.customui.databinding.ActivityMainBinding
 import com.amazonaws.ivs.player.customui.viewModel.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.view_player_controls.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
@@ -62,29 +60,31 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
     val sheetListener by lazy {
         object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                sheetBackground.visibility = View.VISIBLE
-                sheetBackground.alpha = slideOffset
+                binding.sheetBackground.visibility = View.VISIBLE
+                binding.sheetBackground.alpha = slideOffset
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    sheetBackground.visibility = View.GONE
-                    sheetBackground.alpha = 0f
+                    binding.sheetBackground.visibility = View.GONE
+                    binding.sheetBackground.alpha = 0f
                 }
             }
         }
     }
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            player_controls_root.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
-            rate_sheet.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
-            quality_sheet.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+            binding.playerControls.root.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+            binding.rateSheet.root.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+            binding.qualitySheet.root.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
         } else {
-            player_controls_root.layoutParams.width = resources.getDimension(R.dimen.player_control_landscape_width).toInt()
-            rate_sheet.layoutParams.width = resources.getDimension(R.dimen.player_control_landscape_width).toInt()
-            quality_sheet.layoutParams.width = resources.getDimension(R.dimen.player_control_landscape_width).toInt()
+            binding.playerControls.root.layoutParams.width = resources.getDimension(R.dimen.player_control_landscape_width).toInt()
+            binding.rateSheet.root.layoutParams.width = resources.getDimension(R.dimen.player_control_landscape_width).toInt()
+            binding.qualitySheet.root.layoutParams.width = resources.getDimension(R.dimen.player_control_landscape_width).toInt()
         }
     }
 
@@ -92,12 +92,13 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         super.onCreate(savedInstanceState)
         App.component.inject(this)
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
+            binding = this
             data = viewModel
             lifecycleOwner = this@MainActivity
         }
 
         // Surface view listener for rotation handling
-        surface_view.addOnLayoutChangeListener(
+        binding.surfaceView.addOnLayoutChangeListener(
             object : View.OnLayoutChangeListener {
                 override fun onLayoutChange(
                     v: View?,
@@ -114,9 +115,9 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
                         val width = viewModel.playerParamsChanged.value?.first
                         val height = viewModel.playerParamsChanged.value?.second
                         if (width != null && height != null) {
-                            surface_view.post {
+                            binding.surfaceView.post {
                                 Log.d(TAG,"On rotation player layout params changed $width $height")
-                                fitSurfaceToView(surface_view, width, height)
+                                fitSurfaceToView(binding.surfaceView, width, height)
                             }
                         }
                     }
@@ -124,7 +125,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
             }
         )
 
-        sheetBackground.setOnClickListener {
+        binding.sheetBackground.setOnClickListener {
             qualityDialog.dismiss()
             rateDialog.dismiss()
             sourceDialog.dismiss()
@@ -136,39 +137,39 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
                     // Indicates that the Player is buffering content
                     viewModel.buffering.value = true
                     viewModel.buttonState.value = PlayingState.PLAYING
-                    status_text.setTextColor(Color.WHITE)
-                    status_text.text = getString(R.string.buffering)
+                    binding.playerControls.statusText.setTextColor(Color.WHITE)
+                    binding.playerControls.statusText.text = getString(R.string.buffering)
                 }
                 Player.State.IDLE -> {
                     // Indicates that the Player is idle
                     viewModel.buffering.value = false
                     viewModel.buttonState.value = PlayingState.PAUSED
-                    status_text.setTextColor(Color.WHITE)
-                    status_text.text = getString(R.string.paused)
+                    binding.playerControls.statusText.setTextColor(Color.WHITE)
+                    binding.playerControls.statusText.text = getString(R.string.paused)
                 }
                 Player.State.READY -> {
                     // Indicates that the Player is ready to play the loaded source
                     viewModel.buffering.value = false
                     viewModel.buttonState.value = PlayingState.PAUSED
-                    status_text.setTextColor(Color.WHITE)
-                    status_text.text = getString(R.string.paused)
+                    binding.playerControls.statusText.setTextColor(Color.WHITE)
+                    binding.playerControls.statusText.text = getString(R.string.paused)
                 }
                 Player.State.ENDED -> {
                     // Indicates that the Player reached the end of the stream
                     viewModel.buffering.value = false
                     viewModel.buttonState.value = PlayingState.PAUSED
-                    status_text.setTextColor(Color.WHITE)
-                    status_text.text = getString(R.string.ended)
+                    binding.playerControls.statusText.setTextColor(Color.WHITE)
+                    binding.playerControls.statusText.text = getString(R.string.ended)
                 }
                 Player.State.PLAYING -> {
                     // Indicates that the Player is playing
                     viewModel.buffering.value = false
                     viewModel.buttonState.value = PlayingState.PLAYING
-                    status_text.setTextColor(
+                    binding.playerControls.statusText.setTextColor(
                         (if (viewModel.liveStream.value != null && viewModel.liveStream.value == true)
                             Color.RED else Color.WHITE)
                     )
-                    status_text.text = if (viewModel.liveStream.value != null && viewModel.liveStream.value == true)
+                    binding.playerControls.statusText.text = if (viewModel.liveStream.value != null && viewModel.liveStream.value == true)
                         getString(R.string.live_status) else getString(R.string.vod_status)
                 }
                 else -> { /* Ignored */ }
@@ -181,7 +182,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
         viewModel.playerParamsChanged.observe(this, Observer {
             Log.d(TAG,"Player layout params changed ${it.first} ${it.second}")
-            fitSurfaceToView(surface_view, it.first, it.second)
+            fitSurfaceToView(binding.surfaceView, it.first, it.second)
         })
 
         viewModel.errorHappened.observe(this, Observer {
@@ -191,7 +192,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
         initSurface()
         initButtons()
-        viewModel.playerStart(surface_view.holder.surface)
+        viewModel.playerStart(binding.surfaceView.holder.surface)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -221,14 +222,14 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         qualityDialog.release()
         rateDialog.release()
         sourceDialog.release()
-        surface_view.holder.removeCallback(this)
+        binding.surfaceView.holder.removeCallback(this)
     }
 
     private fun initSurface() {
-        surface_view.holder.addCallback(this)
-        player_root.setOnClickListener {
+        binding.surfaceView.holder.addCallback(this)
+        binding.playerRoot.setOnClickListener {
             Log.d(TAG,"Player screen clicked")
-            when (player_controls.visibility) {
+            when (binding.playerControls.playerControls.visibility) {
                 View.VISIBLE -> {
                     viewModel.toggleControls(false)
                 }
@@ -239,7 +240,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
             }
         }
 
-        seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.playerControls.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -254,7 +255,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
     private fun initButtons() {
-        play_button_view.setOnClickListener {
+        binding.playerControls.playButtonView.setOnClickListener {
             restartTimer()
             when (viewModel.buttonState.value) {
                 PlayingState.PLAYING -> {
@@ -268,18 +269,18 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
             }
         }
 
-        playback_rate_button.setOnClickListener {
+        binding.playerControls.playbackRateButton.setOnClickListener {
             restartTimer()
             rateDialog.show()
         }
 
-        quality_button.setOnClickListener {
+        binding.playerControls.qualityButton.setOnClickListener {
             restartTimer()
             viewModel.getPlayerQualities()
             qualityDialog.show()
         }
 
-        tv_url_selection_button.setOnClickListener {
+        binding.tvUrlSelectionButton.setOnClickListener {
             restartTimer()
             sourceDialog.show()
         }

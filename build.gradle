@@ -1,26 +1,23 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
-    ext.kotlin_version = '1.7.20'
-    ext.player_version = findProperty("playerVersion") ?: '1.26.0'
+    ext.default_player_version = "1.26.0"
+    ext.player_version = findProperty("playerVersion") ?: default_player_version
+
     repositories {
         google()
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url findProperty("customMavenUrl") ?: ""
-        }
-    }
+plugins {
+    id 'com.android.application' version '8.0.2' apply false
+    id 'com.android.library' version '8.0.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+subprojects {
+    tasks.withType(KotlinCompile).configureEach {
+        kotlinOptions.jvmTarget = "11"
+    }
 }

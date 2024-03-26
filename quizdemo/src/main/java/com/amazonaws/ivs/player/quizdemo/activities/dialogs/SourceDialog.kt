@@ -2,23 +2,27 @@ package com.amazonaws.ivs.player.quizdemo.activities.dialogs
 
 import android.net.Uri
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
+import com.amazonaws.ivs.player.quizdemo.R
 import com.amazonaws.ivs.player.quizdemo.activities.MainActivity
 import com.amazonaws.ivs.player.quizdemo.activities.adapters.SourceOptionAdapter
 import com.amazonaws.ivs.player.quizdemo.common.*
 import com.amazonaws.ivs.player.quizdemo.data.entity.SourceDataItem
 import com.amazonaws.ivs.player.quizdemo.viewModels.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.player_source_sheet.*
 
 class SourceDialog(
     private val activity: MainActivity,
     private val viewModel: MainViewModel
 ) : SourceOptionAdapter.PlayerOptionCallback {
 
-    private val sourceMenu by lazy { BottomSheetBehavior.from(activity.source_sheet) }
+    private val sourceMenu by lazy { BottomSheetBehavior.from(activity.findViewById(R.id.source_sheet)) }
     private val optionsAdapter by lazy { SourceOptionAdapter(this) }
 
     init {
@@ -27,22 +31,25 @@ class SourceDialog(
     }
 
     private fun initViews() {
+        val sourceView = activity.findViewById<EditText>(R.id.source)
+        val okBtn = activity.findViewById<View>(R.id.ok_btn)
+        val closeBtn = activity.findViewById<View>(R.id.close_btn)
 
-        activity.ok_btn.setOnClickListener{
-            val selectedItem = activity.source.text.toString()
+        okBtn.setOnClickListener {
+            val selectedItem = sourceView.text.toString()
             val source = SourceDataItem(selectedItem, selectedItem)
             viewModel.addSource(source)
             onOptionClicked(selectedItem)
             dismiss()
         }
 
-        activity.close_btn.setOnClickListener{
+        closeBtn.setOnClickListener{
             dismiss()
         }
 
-        activity.source.setOnEditorActionListener { _, actionId, _ ->
+        sourceView.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val selectedItem = activity.source.text.toString()
+                val selectedItem = view.text.toString()
                 val source = SourceDataItem(selectedItem, selectedItem)
                 viewModel.addSource(source)
                 onOptionClicked(selectedItem)
@@ -73,13 +80,13 @@ class SourceDialog(
 
     private fun initAdapter() {
         // Default option list
-        activity.option_list.apply {
+        activity.findViewById<RecyclerView>(R.id.option_list).apply {
             adapter = optionsAdapter
         }
 
-        viewModel.sources.observe(activity, Observer {
+        viewModel.sources.observe(activity) {
             optionsAdapter.items = it
-        })
+        }
     }
 
     override fun onOptionClicked(url: String) {

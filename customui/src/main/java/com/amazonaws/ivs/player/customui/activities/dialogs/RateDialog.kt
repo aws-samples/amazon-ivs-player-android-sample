@@ -1,6 +1,8 @@
 package com.amazonaws.ivs.player.customui.activities.dialogs
 
+import android.view.View
 import androidx.lifecycle.Observer
+import com.amazonaws.ivs.player.customui.R
 import com.amazonaws.ivs.player.customui.activities.MainActivity
 import com.amazonaws.ivs.player.customui.activities.adapters.PlayerOptionAdapter
 import com.amazonaws.ivs.player.customui.common.hide
@@ -8,15 +10,12 @@ import com.amazonaws.ivs.player.customui.common.isOpened
 import com.amazonaws.ivs.player.customui.common.open
 import com.amazonaws.ivs.player.customui.viewModel.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.player_rate_sheet.*
-
 class RateDialog(
     private val activity: MainActivity,
     private val viewModel: MainViewModel
 ) : PlayerOptionAdapter.PlayerOptionCallback {
 
-    private val rateMenu by lazy { BottomSheetBehavior.from(activity.rate_sheet) }
+    private val rateMenu by lazy { BottomSheetBehavior.from(activity.findViewById<View>(R.id.rate_sheet)) }
     private val rateAdapter by lazy { PlayerOptionAdapter(this) }
 
     init {
@@ -29,13 +28,13 @@ class RateDialog(
             rateAdapter.items = viewModel.getPlayBackRates().toMutableList()
         })
 
-        activity.rate_option_list.apply {
+        activity.binding.rateSheet.rateOptionList.apply {
             adapter = rateAdapter
         }
 
         rateAdapter.items = viewModel.getPlayBackRates().toMutableList()
 
-        activity.rate_close_btn.setOnClickListener {
+        activity.binding.rateSheet.rateCloseBtn.setOnClickListener {
             dismiss()
         }
 

@@ -1,15 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply from: 'dependencies.gradle'
 
 android {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    compileSdkVersion 33
+    compileSdkVersion = 33
 
     defaultConfig {
         applicationId "com.amazonaws.ivs.player.customui"
@@ -37,8 +31,17 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+
     namespace 'com.amazonaws.ivs.player.customui'
 }
+
+apply from: 'dependencies.gradle'

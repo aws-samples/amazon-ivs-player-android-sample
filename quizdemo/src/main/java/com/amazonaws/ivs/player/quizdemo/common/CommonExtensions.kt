@@ -10,10 +10,10 @@ import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.amazonaws.ivs.player.quizdemo.R
+import com.amazonaws.ivs.player.quizdemo.databinding.ViewDialogBinding
 import com.amazonaws.ivs.player.quizdemo.models.AnswerViewItem
 import com.amazonaws.ivs.player.quizdemo.models.QuestionModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.view_dialog.*
 
 
 fun BottomSheetBehavior<View>.isOpened() =
@@ -43,10 +43,14 @@ fun Activity.showDialog(title: String, message: String) {
     val dialog = Dialog(this)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.setCancelable(false)
-    dialog.setContentView(R.layout.view_dialog)
-    dialog.title.text = getString(R.string.error_happened_template, title)
-    dialog.message.text = message
-    dialog.dismiss_btn.setOnClickListener {
+
+    val binding = ViewDialogBinding.inflate(layoutInflater)
+    dialog.setContentView(binding.root)
+
+
+    binding.title.text = getString(R.string.error_happened_template, title)
+    binding.message.text = message
+    binding.dismissBtn.setOnClickListener {
         dialog.dismiss()
     }
     dialog.show()
