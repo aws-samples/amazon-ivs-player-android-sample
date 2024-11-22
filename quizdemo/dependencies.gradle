@@ -6,7 +6,7 @@ def recyclerViewVersion = '1.3.2'
 def roomVersion = '2.4.3'
 def cardViewVersion = '1.0.0'
 def lifecycleVersion = '2.5.1'
-def daggerVersion = '2.43.2'
+def daggerVersion = '2.46.1'
 def gsonVersion = '2.8.9'
 
 dependencies {
