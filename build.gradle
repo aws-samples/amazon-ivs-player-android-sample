@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-    ext.default_player_version = "1.38.0"
+    ext.default_player_version = "1.39.0"
     ext.player_version = findProperty("playerVersion") ?: default_player_version
 
     repositories {
