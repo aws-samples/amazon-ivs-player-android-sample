@@ -234,8 +234,8 @@ class MainViewModel(
         launchMain {
             cacheProvider.sourcesDao().getAll().collect {
                 val itemList: MutableList<SourceDataItem> = mutableListOf(
-                    SourceDataItem(Configuration.LIVE_PORTRAIT_LINK, Configuration.PORTRAIT_OPTION),
-                    SourceDataItem(Configuration.RECORDED_LANDSCAPE_LINK, Configuration.LANDSCAPE_OPTION)
+                    SourceDataItem(Configuration.LIVE_LANDSCAPE_LINK, Configuration.LIVE_OPTION),
+                    SourceDataItem(Configuration.RECORDED_LANDSCAPE_LINK, Configuration.RECORDED_OPTION)
                 )
                 itemList.addAll(it)
                 sources.value = itemList

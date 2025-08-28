@@ -11,5 +11,5 @@ data class SourceDataItem(
     val title: String = "",
     val isDefault: Boolean = false
 ) {
-    fun isDefaultOption(): Boolean = (title == Configuration.LANDSCAPE_OPTION || title == Configuration.PORTRAIT_OPTION)
+    fun isDefaultOption(): Boolean = (title == Configuration.LIVE_OPTION || title == Configuration.RECORDED_OPTION)
 }
