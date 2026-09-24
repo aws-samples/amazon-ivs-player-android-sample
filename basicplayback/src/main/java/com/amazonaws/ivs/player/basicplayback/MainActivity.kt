@@ -5,12 +5,17 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import com.amazonaws.ivs.player.*
 import java.nio.ByteBuffer
 import java.util.*
@@ -28,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         playerView = findViewById(R.id.playerView)
+
+        applyWindowInsets()
 
         // Load Uri to play
         playerView.player.load(Uri.parse("https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8"))
@@ -169,5 +176,34 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun applyWindowInsets() {
+        val rateSpinner = findViewById<Spinner>(R.id.rate_spinner)
+        val qualitySpinner = findViewById<Spinner>(R.id.quality_spinner)
+        val rateBottom = (rateSpinner.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+        val qualityBottom = (qualitySpinner.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+        ViewCompat.setOnApplyWindowInsetsListener(playerView) { _, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            // Inset the control overlay so the timer clears the status bar and the
+            // seek bar clears the navigation bar.
+            playerView.controls.updatePadding(
+                left = insets.left,
+                top = insets.top,
+                right = insets.right,
+                bottom = insets.bottom
+            )
+            // Lift the spinners above the navigation bar.
+            rateSpinner.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = rateBottom + insets.bottom
+            }
+            qualitySpinner.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = qualityBottom + insets.bottom
+            }
+            windowInsets
+        }
+        ViewCompat.requestApplyInsets(playerView)
     }
 }

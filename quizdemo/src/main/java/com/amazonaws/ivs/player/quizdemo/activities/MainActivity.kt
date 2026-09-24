@@ -6,8 +6,11 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.amazonaws.ivs.player.quizdemo.App
@@ -56,6 +59,36 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     lateinit var binding: ActivityMainBinding
 
+    private var systemBarBottomInset = 0
+
+    private fun setupWindowInsets() {
+        val sourceButton = binding.sourceButton
+        val liveView = binding.liveView
+        val sourceSheet = binding.sourceSheet.root
+        val sourceButtonParams = sourceButton.layoutParams as ViewGroup.MarginLayoutParams
+        val liveParams = liveView.layoutParams as ViewGroup.MarginLayoutParams
+        val sourceButtonTop = sourceButtonParams.topMargin
+        val sourceButtonRight = sourceButtonParams.rightMargin
+        val liveTop = liveParams.topMargin
+        val liveLeft = liveParams.leftMargin
+        val sheetTop = sourceSheet.paddingTop
+        val sheetBottom = sourceSheet.paddingBottom
+        findViewById<View>(android.R.id.content).doOnApplyWindowInsets { insets ->
+            systemBarBottomInset = insets.bottom
+            changeQuizMargin(resources.configuration)
+            sourceButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = sourceButtonTop + insets.top
+                rightMargin = sourceButtonRight + insets.right
+            }
+            liveView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = liveTop + insets.top
+                leftMargin = liveLeft + insets.left
+            }
+            sourceSheet.updatePadding(top = sheetTop + insets.top, bottom = sheetBottom + insets.bottom)
+        }
+        BottomSheetBehavior.from(sourceSheet).state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         changeQuizMargin(newConfig)
@@ -69,6 +102,8 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
             data = viewModel
             lifecycleOwner = this@MainActivity
         }
+
+        setupWindowInsets()
 
         viewModel.playerParamsChanged.observe(this, Observer {
             Log.d(TAG, "Player layout params changed ${it.first} ${it.second}")
@@ -121,11 +156,12 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
     private fun changeQuizMargin(newConfig: Configuration) {
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            binding.quizRoot.setBottomMargin(resources.getDimension(R.dimen.quiz_root_portrait_margin).toInt())
+        val baseMargin = if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            resources.getDimension(R.dimen.quiz_root_portrait_margin).toInt()
         } else {
-            binding.quizRoot.setBottomMargin(resources.getDimension(R.dimen.quiz_root_landscape_margin).toInt())
+            resources.getDimension(R.dimen.quiz_root_landscape_margin).toInt()
         }
+        binding.quizRoot.setBottomMargin(baseMargin + systemBarBottomInset)
     }
 
     private fun initUi() {

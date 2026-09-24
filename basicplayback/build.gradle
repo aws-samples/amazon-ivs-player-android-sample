@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.android.legacy-kapt'
 
 android {
-    compileSdkVersion = 33
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.amazonaws.ivs.player.basicplayback"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdk 37
         versionCode 1
         versionName "1.0"
     }

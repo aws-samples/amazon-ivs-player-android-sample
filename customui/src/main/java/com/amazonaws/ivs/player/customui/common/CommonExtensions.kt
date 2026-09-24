@@ -6,6 +6,9 @@ import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.amazonaws.ivs.player.customui.R
 import com.amazonaws.ivs.player.customui.databinding.ViewDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -46,4 +49,27 @@ fun Activity.showDialog(title: String, message: String) {
         dialog.dismiss()
     }
     dialog.show()
+}
+
+fun View.doOnApplyWindowInsets(block: (insets: Insets) -> Unit) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
+        block(
+            windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+        )
+        windowInsets
+    }
+    if (isAttachedToWindow) {
+        requestApplyInsets()
+    } else {
+        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                v.removeOnAttachStateChangeListener(this)
+                v.requestApplyInsets()
+            }
+
+            override fun onViewDetachedFromWindow(v: View) = Unit
+        })
+    }
 }

@@ -3,10 +3,10 @@ def coreVersion = '1.10.0'
 def constraintLayoutVersion = '2.1.4'
 def materialDesignVersion = '1.9.0'
 def recyclerViewVersion = '1.3.2'
-def roomVersion = '2.4.3'
+def roomVersion = '2.8.5'
 def cardViewVersion = '1.0.0'
 def lifecycleVersion = '2.5.1'
-def daggerVersion = '2.46.1'
+def daggerVersion = '2.60.1'
 def gsonVersion = '2.8.9'
 
 dependencies {
@@ -29,11 +29,11 @@ dependencies {
     // Room components
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
+    ksp "androidx.room:room-compiler:$roomVersion"
 
     // Dagger
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    ksp "com.google.dagger:dagger-compiler:$daggerVersion"
+    ksp "com.google.dagger:dagger-android-processor:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
     implementation "androidx.appcompat:appcompat:$appCompatVersion"

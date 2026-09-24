@@ -9,10 +9,13 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.amazonaws.ivs.player.Player
@@ -23,6 +26,7 @@ import com.amazonaws.ivs.player.customui.activities.dialogs.RateDialog
 import com.amazonaws.ivs.player.customui.activities.dialogs.SourceDialog
 import com.amazonaws.ivs.player.customui.common.Configuration.HIDE_CONTROLS_DELAY
 import com.amazonaws.ivs.player.customui.common.Configuration.TAG
+import com.amazonaws.ivs.player.customui.common.doOnApplyWindowInsets
 import com.amazonaws.ivs.player.customui.common.enums.PlayingState
 import com.amazonaws.ivs.player.customui.common.launchMain
 import com.amazonaws.ivs.player.customui.common.lazyViewModel
@@ -88,6 +92,37 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
         }
     }
 
+    private fun setupWindowInsets() {
+        val controls = binding.playerControls.root
+        val moreButton = binding.tvUrlSelectionButton
+        val controlsBottom = (controls.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+        val moreParams = moreButton.layoutParams as ViewGroup.MarginLayoutParams
+        val moreTop = moreParams.topMargin
+        val moreRight = moreParams.rightMargin
+        val sourceSheet = binding.sourceSheet.root
+        val rateSheet = binding.rateSheet.root
+        val qualitySheet = binding.qualitySheet.root
+        val sourceTop = sourceSheet.paddingTop
+        val sourceBottom = sourceSheet.paddingBottom
+        val rateBottom = rateSheet.paddingBottom
+        val qualityBottom = qualitySheet.paddingBottom
+        findViewById<View>(android.R.id.content).doOnApplyWindowInsets { insets ->
+            controls.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = controlsBottom + insets.bottom
+            }
+            moreButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = moreTop + insets.top
+                rightMargin = moreRight + insets.right
+            }
+            sourceSheet.updatePadding(top = sourceTop + insets.top, bottom = sourceBottom + insets.bottom)
+            rateSheet.updatePadding(bottom = rateBottom + insets.bottom)
+            qualitySheet.updatePadding(bottom = qualityBottom + insets.bottom)
+        }
+        BottomSheetBehavior.from(sourceSheet).state = BottomSheetBehavior.STATE_HIDDEN
+        BottomSheetBehavior.from(rateSheet).state = BottomSheetBehavior.STATE_HIDDEN
+        BottomSheetBehavior.from(qualitySheet).state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component.inject(this)
@@ -96,6 +131,8 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback {
             data = viewModel
             lifecycleOwner = this@MainActivity
         }
+
+        setupWindowInsets()
 
         // Surface view listener for rotation handling
         binding.surfaceView.addOnLayoutChangeListener(

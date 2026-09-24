@@ -1,27 +1,18 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.android.legacy-kapt'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
-    compileSdkVersion = 33
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.amazonaws.ivs.player.customui"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdk 37
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
-            }
-        }
     }
 
     buildTypes {
@@ -42,6 +33,10 @@ android {
     }
 
     namespace 'com.amazonaws.ivs.player.customui'
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 apply from: 'dependencies.gradle'
