@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.default_player_version = "1.57.0"
+    ext.default_player_version = "1.58.0"
     ext.player_version = findProperty("playerVersion") ?: default_player_version
 
     repositories {
